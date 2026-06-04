@@ -2,6 +2,7 @@
    app.jsx - orchestration: scaling, scene flow, petals, glow, sound.
    ===================================================================== */
 const { useState, useRef, useCallback } = React;
+const MUSIC_TRACK = "music/the-moon-song.mp3?v=20260605";
 
 /* ---- paper grain texture (soft feTurbulence) ---- */
 const PAPER = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")`;
@@ -11,7 +12,7 @@ function useAmbient(){
   const ref = useRef(null);
   const ensureAudio = useCallback(()=>{
     if(ref.current) return ref.current;
-    const audio = new Audio("music/the-moon-song.mp3");
+    const audio = new Audio(MUSIC_TRACK);
     audio.loop = true;
     audio.preload = "auto";
     audio.volume = 0.32;

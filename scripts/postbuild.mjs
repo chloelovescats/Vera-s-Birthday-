@@ -9,8 +9,7 @@ const copies = [
   "art.jsx",
   "scenes.jsx",
   "image-slot.js",
-  "images",
-  "music"
+  "images"
 ];
 
 if (!existsSync(dist)) {
@@ -22,4 +21,9 @@ for (const entry of copies) {
   const to = resolve(dist, entry);
   mkdirSync(resolve(to, ".."), { recursive: true });
   cpSync(from, to, { recursive: true });
+}
+
+const publicDir = resolve(root, "public");
+if (existsSync(publicDir)) {
+  cpSync(publicDir, dist, { recursive: true });
 }
