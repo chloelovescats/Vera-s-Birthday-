@@ -9,7 +9,8 @@ const copies = [
   "art.jsx",
   "scenes.jsx",
   "image-slot.js",
-  "images"
+  "images",
+  "music"
 ];
 
 if (!existsSync(dist)) {

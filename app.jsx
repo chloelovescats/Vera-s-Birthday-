@@ -6,64 +6,28 @@ const { useState, useRef, useCallback } = React;
 /* ---- paper grain texture (soft feTurbulence) ---- */
 const PAPER = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")`;
 
-/* ---- gentle ambient pad (Web Audio, muted by default) ---- */
+/* ---- looping background music, muted by default ---- */
 function useAmbient(){
   const ref = useRef(null);
-  const start = useCallback(()=>{
+  const ensureAudio = useCallback(()=>{
     if(ref.current) return ref.current;
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if(!Ctx) return null;
-    const ctx = new Ctx();
-    const master = ctx.createGain();
-    master.gain.value = 0.0001;
-    const lp = ctx.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.frequency.value = 900;
-    lp.Q.value = 0.4;
-    master.connect(lp);
-    lp.connect(ctx.destination);
-
-    const freqs = [110.0, 164.81, 220.0, 277.18];
-    freqs.forEach((f, i)=>{
-      const oscillator = ctx.createOscillator();
-      oscillator.type = i === 0 ? "sine" : "triangle";
-      oscillator.frequency.value = f;
-      oscillator.detune.value = i % 2 ? 4 : -4;
-
-      const gain = ctx.createGain();
-      gain.gain.value = i === 0 ? 0.16 : 0.09 - i * 0.012;
-      oscillator.connect(gain);
-      gain.connect(master);
-
-      const lfo = ctx.createOscillator();
-      lfo.type = "sine";
-      lfo.frequency.value = 0.03 + i * 0.017;
-
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.value = 0.03;
-      lfo.connect(lfoGain);
-      lfoGain.connect(gain.gain);
-
-      oscillator.start();
-      lfo.start();
-    });
-
-    ref.current = { ctx, master };
-    return ref.current;
+    const audio = new Audio("music/the-moon-song.mp3");
+    audio.loop = true;
+    audio.preload = "auto";
+    audio.volume = 0.32;
+    ref.current = audio;
+    return audio;
   }, []);
 
   return useCallback((on)=>{
-    const ambient = start();
-    if(!ambient) return;
-
-    const { ctx, master } = ambient;
-    if(ctx.state === "suspended") ctx.resume();
-
-    const t = ctx.currentTime;
-    master.gain.cancelScheduledValues(t);
-    master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), t);
-    master.gain.exponentialRampToValueAtTime(on ? 0.09 : 0.0001, t + (on ? 1.6 : 0.8));
-  }, [start]);
+    const audio = ensureAudio();
+    if(on){
+      audio.play().catch(()=>{});
+      return;
+    }
+    audio.pause();
+    audio.currentTime = 0;
+  }, [ensureAudio]);
 }
 
 /* ---- drifting petals + gold motes overlay (subtle) ---- */
