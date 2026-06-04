@@ -84,6 +84,7 @@ const SCENES = [
         <p className="opener">Happy 24th Birthday, precious bubbieboo <H/></p>
         <p>It is a pity we don&apos;t live in two side-by-side dollhouses connected by a giant flowerbed.</p>
         <p>Since we can&apos;t have that, I made you a little garden instead.</p>
+        <p>I filled it with hydrangeas because they remind me of us. Each bloom is made up of many small petals, the same way our friendship has been built from little conversations, shared memories, prayers, and the way we&apos;ve held each other through hardship and anxieties.</p>
       </div>
     ),
   },
@@ -96,21 +97,22 @@ const SCENES = [
     Copy: () => (
       <div className="scene-text">
         <p>As you follow the path, I want you to know how grateful I am that our paths crossed.</p>
-        <p>It has been four years since we met, and I am so thankful for the privilege of growing alongside you. Some of my favorite memories from university have you in them.</p>
+        <p>It has been four years since we met, and I am so thankful for the privilege of growing alongside you. I love that we have been able to experience adulting and womanhood together. Even when we are apart, I feel you cheering me on, and I hope you feel the same from me.</p>
         <Beads style={{ marginTop: "16px" }}/>
       </div>
     ),
   },
   {
     key: "hydrangeas",
-    eyebrow: "Awww!",
+    eyebrow: "Awwwwww!",
     btn: "Continue",
     Deco: () => <CornerBlooms seed={8}/>,
     Art: () => <Keepsake id="photo-bloom" oval w={150} h={186} placeholder="A photo of her" src="images/photo-bloom.jpg"/>,
     Copy: () => (
       <div className="scene-text">
         <p>Looking at us here makes me smile.</p>
-        <p>So much has changed since we first met, yet one thing has stayed the same: I have always been grateful for your friendship. Thank you for letting me be part of your life through all the ordinary days and all the important ones too.</p>
+        <p>Time really flies. Insane. I buy beads, and now I get to be part of your life, from random catch-ups to watching you love baby Raphael so wholeheartedly.</p>
+        <p>Even though we barely get time to meet properly, I am really grateful I still get a front-row seat in your life. Being his godma is honestly awesome and I hope we get to do family vacays as aunties one day.</p>
       </div>
     ),
   },
@@ -128,7 +130,7 @@ const SCENES = [
     Copy: () => (
       <div className="scene-text">
         <p>I&apos;ve had the privilege of watching you navigate seasons that would have tested anyone&apos;s faith and spirit.</p>
-        <p>I know there were days that asked a lot of you. I wish I could be there more often for you.</p>
+        <p>I know there were days that asked a lot of you. I wish I could be there more often for you. Just as you cheer me on in everything I do, I hope you know the door is always open for you to come and rest here whenever you need to.</p>
       </div>
     ),
   },
@@ -142,7 +144,7 @@ const SCENES = [
       <div className="scene-text">
         <p className="opener">Oh look, a kitte!</p>
         <p>I just thought the garden needed one.</p>
-        <p>Also, every secret garden deserves a tiny guardian, and this one reminded me that even in busy seasons, there is always room for a little joy.</p>
+        <p>Also, every secret garden deserves a tiny guardian. I hope that even in busy, tiring seasons, there is always room for a little joy.</p>
       </div>
     ),
   },
@@ -184,7 +186,7 @@ const SCENES = [
           <span className="ref">Exodus 14:14</span>
         </div>
         <p>May this year be one where you experience God&apos;s faithfulness in new ways, find rest in His presence, and discover that even greater blessings are waiting ahead than you could have imagined.</p>
-        <p>Thank you for letting me walk alongside you through these years. I cannot imagine my life without your friendship, your wisdom, your laughter, and your unwavering heart.</p>
+        <p>Thank you for letting me walk alongside you through these years. I cannot imagine my life without your friendship, your wisdom, your laughter, and your beautiful heart.</p>
         <div className="final-divider"></div>
         <div className="final-sign">
           <span className="small">You are deeply loved, and I am so proud of you. <H/></span>
