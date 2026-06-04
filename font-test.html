@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Font Test</title>
+<style>
+@font-face{
+  font-family:"Perfect Romantic";
+  src:url("fonts/PerfectRomantic-Regular.otf") format("opentype"),
+      url("fonts/PerfectRomantic-Regular.ttf") format("truetype");
+  font-display:swap;
+}
+body{background:#F7F3EE;color:#4A3428;margin:0;padding:40px;}
+.pr{font-family:"Perfect Romantic",cursive;}
+h1{font-size:64px;margin:0 0 10px;}
+.btn{font-size:34px;letter-spacing:.06em;}
+.body{font-size:30px;line-height:1.5;max-width:14ch;}
+.small{font-size:22px;letter-spacing:.3em;text-transform:uppercase;}
+.row{margin-bottom:28px;border-bottom:1px solid #ddd;padding-bottom:18px;}
+</style>
+</head>
+<body>
+<div class="row pr"><h1>Open the Gate</h1></div>
+<div class="row pr btn">Follow the Path &bull; Carry the Lantern</div>
+<div class="row pr small">The Hydrangeas</div>
+<div class="row pr body">Happy 24th Birthday, precious bubbieboo. It is a pity we don't live in two side-by-side dollhouses.</div>
+<div class="row" style="font-family:'Cormorant Garamond',serif;font-size:30px;">Cormorant for comparison: Happy 24th Birthday</div>
+</body>
+</html>

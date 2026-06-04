@@ -1,0 +1,394 @@
+/* ============================================================
+   The Garden Beyond The Gate — stylesheet
+   Palette
+     --ivory   #F7F3EE   warm ivory paper
+     --peri    #A7B8F5   periwinkle blue
+     --hydr    #7E98D6   dusty hydrangea blue
+     --blush   #E8C9D2   soft blush pink
+     --choco   #4A3428   deep chocolate brown (text)
+     --gold    #B89B5E   antique gold (buttons, linework)
+   ============================================================ */
+
+@font-face{
+  font-family:"Perfect Romantic";
+  src:url("fonts/PerfectRomantic-Regular.otf") format("opentype"),
+      url("fonts/PerfectRomantic-Regular.ttf") format("truetype");
+  font-display:swap;
+}
+
+:root{
+  --ivory:#F7F3EE;
+  --ivory-2:#EFE8DD;
+  --peri:#A7B8F5;
+  --hydr:#7E98D6;
+  --blush:#E8C9D2;
+  --choco:#4A3428;
+  --choco-soft:#6B5345;
+  --gold:#B89B5E;
+  --gold-deep:#9A7F45;
+
+  --card-w:480px;
+  --card-h:854px;
+
+  --serif:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --script:"Perfect Romantic", cursive;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{ height:100%; }
+body{
+  background:#211b15;
+  /* soft deep vignette so the ivory card glows like lit paper */
+  background:
+    radial-gradient(120% 90% at 50% 38%, #34291f 0%, #241d16 55%, #181109 100%),
+    radial-gradient(140% 100% at 50% 50%, #2c2419 0%, #15110c 100%);
+  font-family:var(--serif);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+  color:var(--choco);
+}
+
+/* ---- scaling stage : letterboxes the fixed 9:16 card ---- */
+#stage{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+#scaler{
+  width:var(--card-w); height:var(--card-h);
+  transform-origin:center center;
+}
+
+/* ---- the card : warm ivory paper ---- */
+#card{
+  position:relative;
+  width:100%; height:100%;
+  overflow:hidden;
+  background:
+    radial-gradient(135% 95% at 50% 18%, #FBF8F3 0%, var(--ivory) 46%, var(--ivory-2) 100%);
+  box-shadow:0 40px 120px -30px rgba(0,0,0,.7), 0 2px 0 rgba(255,255,255,.4) inset;
+  isolation:isolate;
+}
+
+/* paper grain + soft watercolour edge framing */
+#card::before{   /* paper grain */
+  content:""; position:absolute; inset:0; z-index:6; pointer-events:none;
+  background-image:var(--paper);
+  opacity:.5; mix-blend-mode:multiply;
+}
+#card::after{    /* gentle inner vignette / deckled edge */
+  content:""; position:absolute; inset:0; z-index:7; pointer-events:none;
+  box-shadow:
+    0 0 0 1px rgba(184,155,94,.18) inset,
+    0 0 70px 24px rgba(74,52,40,.06) inset;
+}
+
+/* ============================================================
+   Scenes
+   ============================================================ */
+.scene{
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column;
+  padding:36px 38px 30px;
+  opacity:0; visibility:hidden;
+  transform:scale(1.014);
+  transition:opacity 1100ms cubic-bezier(.4,0,.2,1),
+             transform 1400ms cubic-bezier(.22,1,.36,1),
+             visibility 0s linear 1100ms;
+  pointer-events:none;
+}
+.scene.active{
+  opacity:1; visibility:visible; transform:scale(1);
+  transition:opacity 1200ms cubic-bezier(.4,0,.2,1),
+             transform 1600ms cubic-bezier(.22,1,.36,1),
+             visibility 0s;
+  pointer-events:auto;
+}
+
+/* border frame of blooms — sits behind everything, never over text */
+.scene-deco{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+
+/* compact focal art band at the top */
+.scene-art{
+  position:relative; z-index:2;
+  flex:0 0 auto;
+  height:30%;
+  min-height:172px;
+  display:flex; align-items:center; justify-content:center;
+}
+.scene-art .art-figure{ height:100%; width:100%; }
+.scene-art .art-svg{ height:100%; width:auto; max-width:96%; }
+
+/* a real watercolour painting as the focal art */
+.scene-img{
+  position:relative; z-index:2;
+  max-height:100%; max-width:94%;
+  width:auto; height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 10px 22px rgba(74,52,40,.14));
+  animation:sway 9s ease-in-out infinite;
+}
+.scene-img.tall{ max-height:118%; }   /* let the gate / lantern read as a hero */
+
+/* text block — scrolls gracefully on the long screens, centred when short */
+.scene-copy{
+  position:relative; z-index:2;
+  flex:1 1 auto; min-height:0;
+  overflow-y:auto;
+  display:flex; flex-direction:column;
+  scrollbar-width:none; -ms-overflow-style:none;
+  -webkit-mask-image:linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
+          mask-image:linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
+}
+.scene-copy::-webkit-scrollbar{ display:none; }
+.copy-inner{
+  margin:auto 0;            /* centres when short, collapses + scrolls when tall */
+  padding:14px 0;
+  text-align:center;
+  display:flex; flex-direction:column; align-items:center;
+}
+.eyebrow{
+  font-size:12px; letter-spacing:.34em; text-transform:uppercase;
+  color:var(--gold-deep); font-weight:600;
+  margin-bottom:14px;
+  opacity:.9;
+}
+.scene-text{
+  font-size:18px; line-height:1.45; font-weight:400;
+  color:var(--choco);
+  max-width:34ch;
+  text-wrap:pretty;
+}
+.scene-text p{ margin:0 0 .72em; }
+.scene-text p:last-child{ margin-bottom:0; }
+.scene-text em{ font-style:italic; }
+.scene-text .heart{ color:var(--gold-deep); font-style:normal; font-size:.92em; }
+
+/* a tight stanza of short lines (e.g. “We see…”) */
+.stanza{ margin:.5em 0; }
+.stanza p{ margin:0 0 .26em; }
+.opener{ font-size:19px; }
+
+/* verse */
+.verse{
+  margin-top:18px;
+  font-style:italic;
+  font-size:17px; line-height:1.4;
+  color:var(--choco-soft);
+  position:relative;
+  padding-top:16px;
+}
+.verse::before{
+  content:""; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:54px; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.verse .ref{
+  display:block; margin-top:8px;
+  font-style:normal; font-size:13px; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--gold-deep);
+}
+
+/* the final big message */
+.final-text{ font-size:17px; }
+.final-divider{ width:46px; height:1px; margin:18px auto;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent); }
+.final-sign{
+  margin-top:4px; font-size:19px; font-style:italic; color:var(--choco);
+  line-height:1.4;
+}
+.final-sign .small{ display:block; font-size:16px; font-style:normal; margin-top:8px; color:var(--choco-soft); }
+.final-sign .by{ display:block; margin-top:12px; font-size:17px; color:var(--gold-deep); font-style:normal; letter-spacing:.04em; }
+
+/* ---- the advance button : text on a painted brushstroke ---- */
+.scene-action{ flex:0 0 auto; margin-top:16px; display:flex; justify-content:center; z-index:2; position:relative; }
+.btn{
+  -webkit-appearance:none; appearance:none; cursor:pointer;
+  font-family:var(--script);
+  font-size:30px; letter-spacing:.01em; text-transform:none; font-weight:400;
+  color:var(--choco);
+  background:url("images/button.png") center/100% 100% no-repeat;
+  border:none;
+  /* extra left+bottom padding keeps the words off the painted blossoms */
+  padding:30px 50px 40px 78px;
+  min-width:264px;
+  position:relative;
+  line-height:1;
+  filter:drop-shadow(0 8px 16px rgba(74,52,40,.16));
+  transition:transform .55s cubic-bezier(.22,1,.36,1), filter .55s ease;
+}
+.btn .label{ position:relative; z-index:2; display:block; }
+.btn:hover{ transform:translateY(-2px) scale(1.025); filter:drop-shadow(0 12px 22px rgba(74,52,40,.22)); }
+.btn:active{ transform:translateY(0) scale(.99); }
+
+/* flourish no longer used — the painted stroke is the frame */
+.btn-flourish{ display:none; }
+
+/* ============================================================
+   Watercolour florals
+   ============================================================ */
+/* a hydrangea cluster (mophead) — florets positioned inside */
+.hydrangea{ position:absolute; pointer-events:none; }
+.floret{
+  position:absolute; transform:translate(-50%,-50%);
+  filter:blur(.55px);
+}
+.petal{
+  position:absolute; left:50%; top:50%;
+  width:var(--ps); height:calc(var(--ps)*1.18);
+  border-radius:60% 60% 58% 58% / 72% 72% 40% 40%;
+  background:
+    radial-gradient(70% 80% at 50% 78%, color-mix(in oklab, var(--pc) 86%, white) 0%,
+                    var(--pc) 55%, color-mix(in oklab,var(--pc) 70%, #5a6fae) 100%);
+  transform-origin:50% 100%;
+  opacity:.93;
+  box-shadow:0 0 5px rgba(126,152,214,.18);
+}
+.floret-core{
+  position:absolute; left:50%; top:50%; width:2.4px; height:2.4px; border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:var(--gold);
+  opacity:.7; box-shadow:0 0 4px rgba(184,155,94,.5);
+}
+/* soft watercolour wash behind each cluster */
+.hydr-wash{
+  position:absolute; transform:translate(-50%,-50%);
+  border-radius:50%;
+  filter:blur(22px);
+  opacity:.5;
+  pointer-events:none;
+}
+
+/* drifting individual petals overlay */
+#petals{ position:absolute; inset:0; z-index:5; pointer-events:none; overflow:hidden; }
+.drift{
+  position:absolute; top:-6%;
+  width:13px; height:15px;
+  border-radius:60% 60% 58% 58% / 72% 72% 40% 40%;
+  opacity:0;
+  will-change:transform,opacity;
+  animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{ transform:translateY(-20px) translateX(0) rotate(0deg); opacity:0; }
+  12%{ opacity:.55; }
+  88%{ opacity:.45; }
+  100%{ transform:translateY(900px) translateX(var(--dx,40px)) rotate(var(--dr,220deg)); opacity:0; }
+}
+
+/* simple gold sparkle / glow motes */
+.mote{
+  position:absolute; width:3px; height:3px; border-radius:50%;
+  background:radial-gradient(circle,var(--gold),transparent 70%);
+  opacity:0; animation:twinkle ease-in-out infinite;
+}
+@keyframes twinkle{ 0%,100%{opacity:0; transform:scale(.6);} 50%{opacity:.85; transform:scale(1);} }
+
+/* gentle floating for art focal elements */
+@keyframes sway{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-6px) rotate(.4deg);} }
+@keyframes breathe-glow{ 0%,100%{opacity:.5;} 50%{opacity:.9;} }
+@keyframes bloom-in{ 0%{transform:translate(-50%,-50%) scale(.4); opacity:0;} 100%{transform:translate(-50%,-50%) scale(1); opacity:1;} }
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce){
+  .drift,.mote,.sway,[class*="sway"]{ animation:none !important; }
+  .scene{ transition:opacity .3s linear !important; }
+}
+
+/* ============================================================
+   Focal line art (gate / lantern / fountain) — gold + chocolate
+   ============================================================ */
+.art-figure{ position:relative; width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; }
+.art-svg{ overflow:visible; }
+.ink{ fill:none; stroke:var(--choco); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+.ink-soft{ fill:none; stroke:var(--choco-soft); stroke-width:1.6; stroke-linecap:round; opacity:.8; }
+.gild{ fill:none; stroke:var(--gold); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.gild-fill{ fill:var(--gold); opacity:.92; }
+
+/* radial glow halo for lantern / warm light */
+.halo{
+  position:absolute; border-radius:50%;
+  background:radial-gradient(circle, rgba(184,155,94,.55) 0%, rgba(184,155,94,.20) 38%, transparent 70%);
+  filter:blur(2px);
+  animation:breathe-glow 5.5s ease-in-out infinite;
+  pointer-events:none;
+}
+.warm-wash{
+  position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:radial-gradient(70% 50% at 50% 42%, rgba(184,155,94,.16), transparent 68%);
+}
+
+/* ============================================================
+   Photo keepsake frame (gold)
+   ============================================================ */
+.keepsake{
+  position:relative;
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:9px;
+}
+.keepsake::before{ /* outer gold ring */
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  border:1.5px solid var(--gold);
+  box-shadow:0 0 0 1px rgba(184,155,94,.25), 0 12px 30px -10px rgba(74,52,40,.45);
+}
+.keepsake::after{ /* thin inner ring */
+  content:""; position:absolute; inset:7px; border-radius:inherit;
+  border:1px solid rgba(184,155,94,.5);
+  pointer-events:none; z-index:3;
+}
+.keepsake image-slot{ display:block; }
+.keepsake-oval{ border-radius:50%; }
+.keepsake-oval::after{ border-radius:50%; }
+
+/* small caption under a keepsake */
+.keepsake-cap{
+  margin-top:14px; font-style:italic; font-size:16px; color:var(--choco-soft);
+  text-align:center;
+}
+
+/* ============================================================
+   Beaded-bracelet motif (personal touch) — a delicate divider
+   ============================================================ */
+.beads{ display:flex; align-items:center; justify-content:center; gap:7px; margin:0 auto; }
+.beads .thread{ width:30px; height:1px; background:linear-gradient(90deg,transparent,var(--gold)); opacity:.6; }
+.beads .thread.r{ background:linear-gradient(90deg,var(--gold),transparent); }
+.bead{ width:7px; height:7px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, color-mix(in oklab,var(--c) 70%,white), var(--c));
+  box-shadow:0 0 4px rgba(126,152,214,.4), inset 0 0 2px rgba(255,255,255,.5);
+}
+
+/* ============================================================
+   Chrome : sound toggle + progress
+   ============================================================ */
+#chrome{ position:absolute; inset:0; z-index:9; pointer-events:none; }
+
+#sound-btn{
+  position:absolute; top:20px; right:20px;
+  width:38px; height:38px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(247,243,238,.5); backdrop-filter:blur(3px);
+  border:1px solid rgba(184,155,94,.45);
+  color:var(--gold-deep); cursor:pointer; pointer-events:auto;
+  transition:transform .4s ease, background .4s ease, border-color .4s ease;
+}
+#sound-btn:hover{ transform:scale(1.08); background:rgba(247,243,238,.8); border-color:var(--gold); }
+#sound-btn svg{ width:18px; height:18px; display:block; }
+
+/* progress dots */
+#progress{
+  position:absolute; left:50%; bottom:18px; transform:translateX(-50%);
+  display:flex; gap:9px; pointer-events:none;
+}
+.dot{ width:5px; height:5px; border-radius:50%;
+  background:var(--gold); opacity:.28; transition:opacity .6s ease, transform .6s ease; }
+.dot.on{ opacity:.95; transform:scale(1.5); }
+.dot.done{ opacity:.5; }
+
+/* intro hint */
+.tap-hint{
+  position:absolute; left:0; right:0; bottom:74px; text-align:center;
+  font-size:13px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-deep);
+  opacity:0; animation:hintpulse 3.4s ease-in-out 1.2s infinite;
+}
+@keyframes hintpulse{ 0%,100%{opacity:0;} 50%{opacity:.7;} }
