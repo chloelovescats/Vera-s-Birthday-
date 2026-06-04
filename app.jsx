@@ -7,7 +7,7 @@ const MUSIC_TRACK = "music/the-moon-song.mp3?v=20260605";
 /* ---- paper grain texture (soft feTurbulence) ---- */
 const PAPER = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")`;
 
-/* ---- looping background music, muted by default ---- */
+/* ---- looping background music ---- */
 function useAmbient(){
   const ref = useRef(null);
   const ensureAudio = useCallback(()=>{
@@ -20,15 +20,18 @@ function useAmbient(){
     return audio;
   }, []);
 
-  return useCallback((on)=>{
+  const play = useCallback(()=>{
     const audio = ensureAudio();
-    if(on){
-      audio.play().catch(()=>{});
-      return;
-    }
+    return audio.play();
+  }, [ensureAudio]);
+
+  const stop = useCallback(()=>{
+    const audio = ensureAudio();
     audio.pause();
     audio.currentTime = 0;
   }, [ensureAudio]);
+
+  return { play, stop };
 }
 
 /* ---- drifting petals + gold motes overlay (subtle) ---- */
@@ -109,17 +112,21 @@ const SoundOff = () => (
 function App(){
   const [cur, setCur] = useState(0);
   const [sound, setSound] = useState(false);
-  const setAmbient = useAmbient();
+  const ambient = useAmbient();
 
   const advance = ()=> setCur((c)=>(c + 1) % SCENES.length);
   const replay = ()=> setCur(0);
   const onBtn = (i)=> (i === SCENES.length - 1 ? replay() : advance());
   const toggleSound = ()=>{
-    setSound((s)=>{
-      const next = !s;
-      setAmbient(next);
-      return next;
-    });
+    if(sound){
+      ambient.stop();
+      setSound(false);
+      return;
+    }
+
+    ambient.play()
+      .then(()=> setSound(true))
+      .catch(()=> setSound(false));
   };
 
   return (
@@ -154,7 +161,7 @@ function App(){
         <button
           id="sound-btn"
           onClick={toggleSound}
-          aria-label={sound ? "Mute ambient sound" : "Play ambient sound"}
+          aria-label={sound ? "Stop music" : "Play music"}
         >
           {sound ? <SoundOn/> : <SoundOff/>}
         </button>
